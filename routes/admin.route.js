@@ -46,10 +46,15 @@ router.post('/user',
 			const insertData = await User.collection.insertOne({ name, phone, email, description, userName, password: hash });
 			if (insertData.acknowledged && insertData.insertedId) {
 				res.success('Successfully! Added new user', { id: insertData.insertedId });
+				return;
 			}
 			res.error('Error while adding new user');
 		} catch (err) {
 			console.log(err);
+			if (err.code === 11000) {
+				res.error('Duplicate key present for: ' + [...Object.keys(err.keyPattern)].join(','));
+				return;
+			}
 			res.error('Uncaught error! something went wrong!');
 		}
 	});
