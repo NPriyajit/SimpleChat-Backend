@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
 
 const MessageObject = {
-	sender: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-	group: { type: mongoose.Schema.Types.ObjectId, ref: 'Group', required: true },
+	senderID: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+	groupID: { type: mongoose.Schema.Types.ObjectId, ref: 'Group', required: true },
 	content: { type: String, required: true },
 	likes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
 	timestamp: { type: Date, default: Date.now },

@@ -12,17 +12,17 @@ router.get('/', async (req, res) => {
 });
 
 // Create Group
-router.post('/group',
+router.post('/groupMessage',
 	body('name').notEmpty().isAlphanumeric(),
 	async (req, res) => {
 		try {
 			const { body } = req;
-			const { name, userID } = body;
+			const { senderID, groupID, content } = body;
 			if (!userID) {
 				return res.error('Error: Can not proceed without userID');
 			}
 			// save user by using User DB
-			const insertData = await Group.collection.insertOne({ name, groupAdmin: new mongoose.Types.ObjectId(userID), members: [new mongoose.Types.ObjectId(userID)] });
+			const insertData = await Group.collection.insertOne({ senderID: new mongoose.Types.ObjectId(senderID), groupID: new mongoose.Types.ObjectId(groupID), content, likes: 0 });
 			if (insertData.acknowledged && insertData.insertedId) {
 				res.success('Successfully! Added new group', { id: insertData.insertedId });
 			}
@@ -32,19 +32,19 @@ router.post('/group',
 		}
 	});
 // Edit User
-router.put('/member', async (req, res) => {
+router.put('/groupMessage/like', async (req, res) => {
 	try {
 		const { body } = req;
-		const { memberID, groupID } = body;
+		const { messageID } = body;
 		// save user by using User DB
-		const updatedData = await Group.collection.updateOne({ _id: new mongoose.Types.ObjectId(groupID) }, {
-			$addToSet: { members: new mongoose.Types.ObjectId(memberID) }
+		const updatedData = await Group.collection.updateOne({ _id: new mongoose.Types.ObjectId(messageID) }, {
+			$inc: { likes: 1 }
 		});
 		if (updatedData.acknowledged && updatedData.matchedCount) {
-			res.success('Successfully! Added new member to group');
+			res.success('Successfully! Liked Message');
 			return;
 		}
-		res.error('Error while adding new member group');
+		res.error('Error while liking the message');
 	} catch (err) {
 		res.error('Uncaught error! something went wrong!');
 	}
@@ -86,12 +86,6 @@ router.get('/members/:groupID', async (req, res) => {
 		},
 	]).toArray();
 	res.success('Successfully! get members', foundData);
-});
-
-
-// Delete User
-router.delete('/group', (req, res) => {
-	console.log(req.body);
 });
 
 

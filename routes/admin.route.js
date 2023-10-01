@@ -5,25 +5,33 @@ const User = require('../db/schema/User.schema');
 const Admin = require('../db/schema/Admin.schema');
 const { param, body } = require('express-validator');
 const { default: mongoose } = require('mongoose');
-router.get('/login', body('userName').notEmpty(), async (req, res) => {
+const logger = require('winston');
+
+
+router.post('/login', body('userName').notEmpty(), async (req, res) => {
 	try {
 		const { body: { userName, password } } = req;
 		// find the user from DB;
 		const user = await Admin.findOne({ userName });
 		if (!user) {
-			res.error('Error while fetching user');
+			logger.error('Error while fetching user');
 		}
 		const { name, password: hashedPassword } = user;
 		if (await argon2.verify(hashedPassword, password)) {
-			const token = jwt.sign({
-				name
-			});
-			res.success('Successfully! send the token', token);
+			try {
+				const token = jwt.sign({
+					name
+				});
+				res.success('Successfully! send the token', token);
+			} catch (jwtFailure) {
+				logger.error('Error while signing token');
+				return;
+			}
 		} else {
-			res.error('Error while authenticating!');
+			logger.error('Error while authenticating!');
 		}
 	} catch (err) {
-		console.log(err);
+		logger.log(err);
 		res.error('Uncaught Error!');
 	}
 });
@@ -50,7 +58,7 @@ router.post('/user',
 			}
 			res.error('Error while adding new user');
 		} catch (err) {
-			console.log(err);
+			logger.log(err);
 			if (err.code === 11000) {
 				res.error('Duplicate key present for: ' + [...Object.keys(err.keyPattern)].join(','));
 				return;
@@ -87,7 +95,7 @@ router.put('/user/:id', param('id').notEmpty().isObject(), async (req, res) => {
 		}
 		res.error('Error while updating user');
 	} catch (err) {
-		console.log(err);
+		logger.log(err);
 		res.error('Uncaught error! something went wrong!');
 	}
 });
@@ -97,7 +105,7 @@ router.get('/users', async (req, res) => {
 		const allUsers = await User.find({});
 		res.success('All Users Data', allUsers);
 	} catch (err) {
-		console.log(err);
+		logger.log(err);
 		res.error('Uncaught error! something went wrong!');
 	}
 });
@@ -113,7 +121,7 @@ router.delete('/user/:id', param('id').notEmpty().isObject(), async (req, res) =
 		}
 		res.error('Error while updating user');
 	} catch (err) {
-		console.log(err);
+		logger.log(err);
 		res.error('Uncaught error! something went wrong!');
 	}
 });
