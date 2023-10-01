@@ -7,6 +7,7 @@ const PORT = process.env.PORT || 5000;
 const admin = require('./routes/admin.route');
 const groups = require('./routes/group.route');
 const user = require('./routes/user.route');
+const groupMessage = require('./routes/message.route');
 
 // middlewares
 const adminMiddleware = require('./middlewares/admin.middleware');
@@ -28,6 +29,7 @@ app.use(customErrorResponse);
 app.use('/api/admin', adminMiddleware, admin);
 app.use('/api/user', userMiddleware, user);
 app.use('/api/groups', groupsMiddleware, groups);
+app.use('/api/groupMessage', groupsMiddleware, groupMessage);
 
 
 
@@ -45,3 +47,5 @@ app.listen(PORT, (err) => {
 	}
 	console.log(':) Listening to port!' + PORT);
 });
+
+module.exports = app;

@@ -5,40 +5,40 @@ const GroupMessage = require('../db/schema/Message.schema');
 const { body } = require('express-validator');
 
 
-// Fetch Groups
-router.get('/', async (req, res) => {
-	const findAllGroups = await Group.find({});
-	return res.success('Successfully! fetched all the groups', findAllGroups);
-});
-
 // Create Group
-router.post('/groupMessage',
+router.post('/',
 	body('name').notEmpty().isAlphanumeric(),
 	async (req, res) => {
 		try {
 			const { body } = req;
 			const { senderID, groupID, content } = body;
-			if (!userID) {
-				return res.error('Error: Can not proceed without userID');
+			if (!senderID) {
+				return res.error('Error: Can not proceed without sender ID');
 			}
 			// save user by using User DB
-			const insertData = await Group.collection.insertOne({ senderID: new mongoose.Types.ObjectId(senderID), groupID: new mongoose.Types.ObjectId(groupID), content, likes: 0 });
+			const insertData = await GroupMessage.collection.insertOne({ senderID: new mongoose.Types.ObjectId(senderID), groupID: new mongoose.Types.ObjectId(groupID), content, likes: [] });
 			if (insertData.acknowledged && insertData.insertedId) {
 				res.success('Successfully! Added new group', { id: insertData.insertedId });
+				return;
 			}
 			res.error('Error while adding new group');
 		} catch (err) {
+			console.log(err);
 			res.error('Uncaught error! something went wrong!');
 		}
 	});
 // Edit User
-router.put('/groupMessage/like', async (req, res) => {
+router.patch('/like/:messageID', async (req, res) => {
 	try {
-		const { body } = req;
-		const { messageID } = body;
+		const { body,params } = req;
+		const { messageID } = params;
+		const { userID } = body;
+		if (!userID) {
+			return res.error('Error: Can not proceed without userID');
+		}
 		// save user by using User DB
-		const updatedData = await Group.collection.updateOne({ _id: new mongoose.Types.ObjectId(messageID) }, {
-			$inc: { likes: 1 }
+		const updatedData = await GroupMessage.collection.updateOne({ _id: new mongoose.Types.ObjectId(messageID) }, {
+			$addToSet: { likes: userID }
 		});
 		if (updatedData.acknowledged && updatedData.matchedCount) {
 			res.success('Successfully! Liked Message');
@@ -46,46 +46,48 @@ router.put('/groupMessage/like', async (req, res) => {
 		}
 		res.error('Error while liking the message');
 	} catch (err) {
+		console.log(err)
 		res.error('Uncaught error! something went wrong!');
 	}
 });
 // Fetch User
-router.get('/members/:groupID', async (req, res) => {
+router.get('/all/:groupID', async (req, res) => {
 	const { groupID } = req.params;
-	const foundData = await Group.collection.aggregate([
+	const foundData = await GroupMessage.collection.aggregate([
 		{
 			'$match': {
-				'_id': new mongoose.Types.ObjectId(groupID)
-			}
-		}, {
-			'$unwind': {
-				'path': '$members'
+				'groupID': new mongoose.Types.ObjectId(groupID)
 			}
 		}, {
 			'$lookup': {
 				'from': 'users',
-				'localField': 'members',
+				'localField': 'senderID',
 				'foreignField': '_id',
-				'as': 'employeeDetails'
+				'as': 'user'
 			}
 		},
 		{
 			'$unwind': {
-				'path': '$employeeDetails'
+				'path': '$user'
 			}
 		},
 		{
 			'$project': {
-				'employeeDetails._id': 1,
-				'employeeDetails.name': 1,
-				'employeeDetails.phone': 1,
-				'employeeDetails.email': 1,
-				'employeeDetails.description': 1,
-				'employeeDetails.userName': 1
+				groupID: 1,
+				content: 1,
+				likes: 1,
+				user: {
+					_id: 1,
+					name: 1,
+					phone: 1,
+					email: 1,
+					description: 1,
+					userName: 1
+				}
 			}
-		},
+		}
 	]).toArray();
-	res.success('Successfully! get members', foundData);
+	res.success('Successfully! get messages', foundData);
 });
 
 
