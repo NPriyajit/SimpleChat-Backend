@@ -10,7 +10,7 @@ const middleware = (req, res, next) => {
 
 	try {
 		const decoded = jwt.verify(token, JWT_SECRET);
-		if (decoded.role !== 'user') {
+		if (decoded.role !== 'admin' && decoded.role !== 'user') {
 			return res.error('Unauthorized User', 401);
 		}
 		req.user = decoded;

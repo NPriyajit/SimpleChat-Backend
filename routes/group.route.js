@@ -25,9 +25,13 @@ router.post('/group',
 			const insertData = await Group.collection.insertOne({ name, groupAdmin: new mongoose.Types.ObjectId(userID), members: [new mongoose.Types.ObjectId(userID)] });
 			if (insertData.acknowledged && insertData.insertedId) {
 				res.success('Successfully! Added new group', { id: insertData.insertedId });
+				return;
 			}
 			res.error('Error while adding new group');
 		} catch (err) {
+			if (err.code == 11000) {
+				return res.error('A Group with same name already exists');
+			}
 			res.error('Uncaught error! something went wrong!');
 		}
 	});
@@ -88,11 +92,6 @@ router.get('/members/:groupID', async (req, res) => {
 	res.success('Successfully! get members', foundData);
 });
 
-
-// Delete User
-router.delete('/group', (req, res) => {
-	console.log(req.body);
-});
 
 
 module.exports = router;

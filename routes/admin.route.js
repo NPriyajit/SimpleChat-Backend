@@ -1,41 +1,8 @@
 const router = require('express').Router();
-const jwt = require('jsonwebtoken');
 const argon2 = require('argon2');
 const User = require('../db/schema/User.schema');
-const Admin = require('../db/schema/Admin.schema');
 const { param, body } = require('express-validator');
 const { default: mongoose } = require('mongoose');
-const logger = require('../custom/logger');
-
-
-router.post('/login', body('userName').notEmpty(), async (req, res) => {
-	try {
-		const { body: { userName, password } } = req;
-		// find the user from DB;
-		const user = await Admin.findOne({ userName });
-		if (!user) {
-			res.error('Error while fetching user');
-			return;
-		}
-		const { name, password: hashedPassword } = user;
-		if (await argon2.verify(hashedPassword, password)) {
-			try {
-				const token = jwt.sign({
-					name
-				});
-				res.success('Successfully! send the token', token);
-			} catch (jwtFailure) {
-				res.error('Error while signing token');
-				return;
-			}
-		} else {
-			res.error('Error while authenticating!');
-		}
-	} catch (err) {
-		console.log(err.message);
-		res.error('Uncaught Error!');
-	}
-});
 
 // Add User
 router.post('/user',
@@ -100,16 +67,7 @@ router.put('/user/:id', param('id').notEmpty().isObject(), async (req, res) => {
 		res.error('Uncaught error! something went wrong!');
 	}
 });
-// Fetch User
-router.get('/users', async (req, res) => {
-	try {
-		const allUsers = await User.find({});
-		res.success('All Users Data', allUsers);
-	} catch (err) {
-		console.log(err.message);
-		res.error('Uncaught error! something went wrong!');
-	}
-});
+
 // Delete User
 router.delete('/user/:id', param('id').notEmpty().isObject(), async (req, res) => {
 	try {
@@ -117,12 +75,11 @@ router.delete('/user/:id', param('id').notEmpty().isObject(), async (req, res) =
 		const { id } = params;
 		const deletedData = await User.deleteOne({ _id: new mongoose.Types.ObjectId(id) });
 		if (deletedData.acknowledged && deletedData.deletedCount) {
-			res.success('Successfully! Updated user');
+			res.success('Successfully! deleted user');
 			return;
 		}
-		res.error('Error while updating user');
+		res.error('Error while deleting user');
 	} catch (err) {
-		console.log(err.message);
 		res.error('Uncaught error! something went wrong!');
 	}
 });

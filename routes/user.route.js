@@ -1,34 +1,33 @@
 const router = require('express').Router();
 const User = require('../db/schema/User.schema');
-const argon = require('argon2');
-const jwt = require('jsonwebtoken');
-const { body } = require('express-validator');
-
-const JWT_SECRET = process.env?.JWT_SECRET ?? 'secret';
-router.post('/login', body('userName').notEmpty(), async (req, res) => {
+// Fetch User
+router.get('/users', async (req, res) => {
 	try {
-		const { body: { userName, password } } = req;
-		// find the user from DB;
-		const user = await User.findOne({ userName });
-		if (!user) {
-			res.error('Error while fetching user');
-			return;
-		}
-		const { phone, name, email, description, password: hashedPassword } = user;
-		if (await argon.verify(hashedPassword, password)) {
-			const token = jwt.sign({
-				phone, name, email, description
-			}, JWT_SECRET);
-			res.success('Successfully! send the token', token);
-		} else {
-			res.error('Error while authenticating!');
-		}
+		const allUsers = await User.find({}, {
+			name: 1,
+			phone: 1,
+			email:  1,
+			description: 1,
+			userName: 1,
+			createdAt: 1
+		});
+		res.success('All Users Data', allUsers);
 	} catch (err) {
-		console.log(err);
-		res.error('Uncaught Error!');
+		console.log(err.message);
+		res.error('Uncaught error! something went wrong!');
 	}
 });
 
-
+// Fetch User by id
+router.get('/users/:id', async (req, res) => {
+	try {
+		const { id } = req.params;
+		const user = await User.findById(id);
+		res.success('Users Data', user);
+	} catch (err) {
+		console.log(err.message);
+		res.error('Uncaught error! something went wrong!');
+	}
+});
 
 module.exports = router;
