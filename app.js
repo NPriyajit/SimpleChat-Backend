@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 require('dotenv').config();
 const bodyParser = require('body-parser');
-const PORT = process.env.PORT || 5000;
+
 
 // internal requires
 const admin = require('./routes/admin.route');
@@ -18,7 +18,6 @@ const userMiddleware = require('./middlewares/user.middleware');
 const multipleMiddleware = require('./middlewares/multiple.middleware');
 const { customSuccessResponse, customErrorResponse } = require('./custom/response');
 const connectToDB = require('./db/connect.db');
-const { body } = require('express-validator');
 // DB connection
 connectToDB();
 
@@ -45,14 +44,5 @@ app.get('/api', (req, res) => {
 
 
 
-
-
-app.listen(PORT, (err) => {
-	if (err) {
-		console.error('Error while listening to port!' + PORT);
-		return;
-	}
-	console.log(':) Listening to port!' + PORT);
-});
 
 module.exports = app;

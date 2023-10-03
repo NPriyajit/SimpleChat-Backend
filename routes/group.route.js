@@ -1,7 +1,6 @@
 const router = require('express').Router();
 const { default: mongoose } = require('mongoose');
 const Group = require('../db/schema/Group.schema');
-const GroupMessage = require('../db/schema/Message.schema');
 const { body } = require('express-validator');
 
 

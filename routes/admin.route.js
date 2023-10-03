@@ -26,9 +26,8 @@ router.post('/user',
 			}
 			res.error('Error while adding new user');
 		} catch (err) {
-			console.log(err.message);
 			if (err.code === 11000) {
-				res.error('Duplicate key present for: ' + [...Object.keys(err.keyPattern)].join(','));
+				res.error('Duplicate key present for: ' + [...Object.keys(err?.keyPattern ?? {})].join(','));
 				return;
 			}
 			res.error('Uncaught error! something went wrong!');

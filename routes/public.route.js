@@ -25,7 +25,6 @@ router.post('/login/user', body('userName').notEmpty(), async (req, res) => {
 			res.error('Error while authenticating!');
 		}
 	} catch (err) {
-		console.log(err);
 		res.error('Uncaught Error!');
 	}
 });
@@ -57,7 +56,6 @@ router.post('/login/admin', async (req, res) => {
 			res.error('Error while authenticating!');
 		}
 	} catch (err) {
-		console.log(err);
 		res.error('Uncaught Error!');
 	}
 });
