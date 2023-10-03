@@ -1,0 +1,153 @@
+{
+	"info": {
+		"_postman_id": "759ed818-d249-4df1-96a6-290751149a12",
+		"name": "Admin",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "16270419"
+	},
+	"item": [
+		{
+			"name": "Admin > Create User",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiRGVmYXVsdF9BZG1pbiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTY5NjI1OTYzMX0.iC8ccsrT8Ie8DfIXDQFW-y_awWYeBBQErVeh_Fv2zbs",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"priyajit\", \n    \"phone\": \"7008472528\",\n    \"userName\": \"priyajit\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/admin/user",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"admin",
+						"user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Admin > Update User",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"priyajit Nayk\",\n    \"userName\": \"priyajit\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/admin/user/:id",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"admin",
+						"user",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "6516ee04d245a256ae147758"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Admin > All Users",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/admin/users",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"admin",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Admin > Delete User",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiRGVmYXVsdF9BZG1pbiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTY5NjI1OTYzMX0.iC8ccsrT8Ie8DfIXDQFW-y_awWYeBBQErVeh_Fv2zbs",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/admin/user/:id",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"admin",
+						"user",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "651add9a9bfdb53cf6bf82de"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Admin Login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"userName\": \"priyajit\",\n    \"password\": \"password\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/login/admin",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"login",
+						"admin"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

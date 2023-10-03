@@ -1,0 +1,95 @@
+{
+	"info": {
+		"_postman_id": "977be004-4d05-4114-850b-afeb099dff2e",
+		"name": "Message",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "16270419"
+	},
+	"item": [
+		{
+			"name": "Group Message > Post New",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"senderID\": \"651830d01a22777e25330441\",\n    \"groupID\": \"65182e8cb8c4773565042776\",\n    \"content\": \"Hi World!\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/groupMessage",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"groupMessage"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Group Messages >  By Group ID",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/groupMessage/all/:groupID",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"groupMessage",
+						"all",
+						":groupID"
+					],
+					"variable": [
+						{
+							"key": "groupID",
+							"value": "65182e8cb8c4773565042776"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Like a message",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"userID\": \"651830d01a22777e25330441\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/groupMessage/like/:messageID",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"groupMessage",
+						"like",
+						":messageID"
+					],
+					"variable": [
+						{
+							"key": "messageID",
+							"value": "6519580c910c9b41c2f0c3a1"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

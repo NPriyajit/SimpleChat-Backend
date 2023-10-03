@@ -1,0 +1,112 @@
+{
+	"info": {
+		"_postman_id": "6ef0f1f1-e52e-4a75-94d9-2b5cfd2c4ac4",
+		"name": "Groups",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "16270419"
+	},
+	"item": [
+		{
+			"name": "Group  > New",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwaG9uZSI6IjcwMDg0NzI1MjgiLCJuYW1lIjoicHJpeWFqaXQiLCJkZXNjcmlwdGlvbiI6bnVsbCwicm9sZSI6InVzZXIiLCJpYXQiOjE2OTYyNjAyNDl9.p8n0YqqPMpDhZAwiqxRimS3d0a2DRcQEN9mcauOwFJw",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"My Group Life\",\n    \"userID\": \"651add9a9bfdb53cf6bf82de\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/groups/group",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"groups",
+						"group"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Group > All Groups",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/groups",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"groups"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Group > Add New Member",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"groupID\": \"65182e8cb8c4773565042776\",\n    \"memberID\": \"651830fe1a22777e25330445\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/groups/member",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"groups",
+						"member"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Group > Get Members",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/groups/members/:groupID",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"groups",
+						"members",
+						":groupID"
+					],
+					"variable": [
+						{
+							"key": "groupID",
+							"value": "65182e8cb8c4773565042776"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
